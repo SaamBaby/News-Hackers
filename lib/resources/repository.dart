@@ -1,10 +1,17 @@
-import 'package:hackers_news/models/article/models.article.dart';
+import 'package:hacker_news/models/article/response/models.article.response.dart';
+import 'package:hacker_news/models/source/response/models.source.response.dart';
 
 import 'article.api.provider.dart';
 
-class Repository{
-  final articleApiProvider =ArticleApiProvider();
+class Repository {
+  final articleApiProvider = ArticleApiProvider();
 
-  Future<List<int>> getAllTopStories()=> articleApiProvider.getAllTopStories();
-  Future<Article> fetchArticle(id) => articleApiProvider.getArticle(id);
+  Future<ArticleResponse?> get getGeneralHeadlines => articleApiProvider.getGeneralHeadlines();
+  Future<SourceResponse?> get getSources => articleApiProvider.getSources();
+
+  Future<ArticleResponse?> getSourceNews(String sourceId) => articleApiProvider.getSourceNews(sourceId);
+
+  Future<ArticleResponse?> get getTopHeadlines => articleApiProvider.getTopHeadlines();
+
+  Future<ArticleResponse?> search(query) => articleApiProvider.search(query);
 }

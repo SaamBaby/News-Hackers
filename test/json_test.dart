@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hackers_news/models/article/models.article.dart';
+import 'package:hacker_news/blocs/bloc.top.headlines.dart';
+import 'package:hacker_news/models/article/models.article.dart';
+import 'package:hacker_news/models/article/response/models.article.response.dart';
+import 'package:hacker_news/resources/repository.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
   test("article parsing", () {
-    const jsonStr= """{
+    const jsonStr = """{
           "by" : "dhouston",
           "descendants" : 71,
           "id" : 8863,
@@ -16,24 +21,25 @@ void main() {
           "url" : "http://www.getdropbox.com/u/2/screencast.html"
         }""";
     //
-    expect(parseArticle(jsonStr).by, "dhouston");
+    expect(parseArticle(json.decode(jsonStr)).title, "dhouston");
   });
 
-  test("http get and parsing", ()async {
-    const  postUrl = "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty";
-    final  response =await http.get(Uri.parse(postUrl));
-    if (response.statusCode == 200) {
-     final listOfIds= parseTopStories(response.body);
-     if(listOfIds.isNotEmpty){
-       final  postUrl = "https://hacker-news.firebaseio.com/v0/item/${listOfIds.first}.json?print=pretty";
-       final  response =await http.get(Uri.parse(postUrl));
-       if (response.statusCode == 200) {
-         expect(parseArticle(response.body).id, 28440742)  ;
-       }
+  test("http get and parsing", () async {
+    String baseUrl = "https://newsapi.org/v2/everything";
 
-     }
+    final url="$baseUrl?country=us&apiKey=_apiKey";
+    final response = await http.get(Uri( scheme: 'https',
+        host:"newsapi.org",path: "/v2/everything"
+    ));
+
+    if (response.statusCode == 200) {
+      expect(
+          ArticleResponse.fromJson(json.decode(response.body))
+              .articles
+              .first
+              .source!
+              .id,
+          "hacker-news");
     }
   });
 }
-
-

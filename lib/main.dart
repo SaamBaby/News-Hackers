@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hackers_news/ui/pages/articles.home.dart';
+import 'package:flutter/services.dart';
+import 'package:hacker_news/ui/pages/root.dart';
+
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+      statusBarBrightness: Brightness.dark, statusBarColor: Colors.transparent));
   runApp(const MyApp());
 }
 
@@ -12,12 +16,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Hacker News',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        appBarTheme: const AppBarTheme(
+          backwardsCompatibility: false, // 1
+        ),
       ),
-      home: const Home(),
+      home: const Root(),
     );
   }
 }
